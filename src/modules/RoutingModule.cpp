@@ -48,9 +48,9 @@ meshtastic_MeshPacket *RoutingModule::allocReply()
 }
 
 void RoutingModule::sendAckNak(meshtastic_Routing_Error err, NodeNum to, PacketId idFrom, ChannelIndex chIndex, uint8_t hopLimit,
-                               bool ackWantsAck)
+                               bool ackWantsAck, uint8_t ackedBy)
 {
-    auto p = allocAckNak(err, to, idFrom, chIndex, hopLimit);
+    auto p = allocAckNak(err, to, idFrom, chIndex, hopLimit, ackedBy);
 
     // Allow the caller to set want_ack on this ACK packet if it's important that the ACK be delivered reliably
     p->want_ack = ackWantsAck;

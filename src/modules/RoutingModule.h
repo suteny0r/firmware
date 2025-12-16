@@ -14,7 +14,7 @@ class RoutingModule : public ProtobufModule<meshtastic_Routing>
     RoutingModule();
 
     virtual void sendAckNak(meshtastic_Routing_Error err, NodeNum to, PacketId idFrom, ChannelIndex chIndex, uint8_t hopLimit = 0,
-                            bool ackWantsAck = false);
+                            bool ackWantsAck = false, uint8_t ackedBy = 0);
 
     meshtastic_MeshPacket *allocAckNak(meshtastic_Routing_Error err, NodeNum to, PacketId idFrom, ChannelIndex chIndex,
                                        uint8_t hopLimit = 0);
