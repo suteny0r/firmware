@@ -208,9 +208,9 @@ meshtastic_MeshPacket *Router::allocForSending()
  * Send an ack or a nak packet back towards whoever sent idFrom
  */
 void Router::sendAckNak(meshtastic_Routing_Error err, NodeNum to, PacketId idFrom, ChannelIndex chIndex, uint8_t hopLimit,
-                        bool ackWantsAck)
+                        bool ackWantsAck, uint8_t ackedBy)
 {
-    routingModule->sendAckNak(err, to, idFrom, chIndex, hopLimit, ackWantsAck);
+    routingModule->sendAckNak(err, to, idFrom, chIndex, hopLimit, ackWantsAck, ackedBy);
 }
 
 void Router::abortSendAndNak(meshtastic_Routing_Error err, meshtastic_MeshPacket *p)
@@ -335,6 +335,13 @@ ErrorCode Router::send(meshtastic_MeshPacket *p)
     // If we are the original transmitter, set the hop limit with which we start
     if (isFromUs(p))
         p->hop_start = p->hop_limit;
+
+    // Debug logging for ACK packets being sent
+    if (p->which_payload_variant == meshtastic_MeshPacket_decoded_tag &&
+        p->decoded.portnum == meshtastic_PortNum_ROUTING_APP && p->decoded.request_id != 0) {
+        LOG_INFO("ACK_SEND: Sending ACK - from=0x%x, to=0x%x, id=0x%x, request_id=0x%x, relay_node=0x%x, hop_limit=%d, hop_start=%d",
+                 p->from, p->to, p->id, p->decoded.request_id, p->relay_node, p->hop_limit, p->hop_start);
+    }
 
     // If the packet hasn't yet been encrypted, do so now (it might already be encrypted if we are just forwarding it)
 

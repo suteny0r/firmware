@@ -124,9 +124,10 @@ class Router : protected concurrency::OSThread, protected PacketHistory
 
     /**
      * Send an ack or a nak packet back towards whoever sent idFrom
+     * @param ackedBy For implicit ACKs, the relay_node of the packet that triggered the ACK (identifies which node rebroadcast)
      */
     void sendAckNak(meshtastic_Routing_Error err, NodeNum to, PacketId idFrom, ChannelIndex chIndex, uint8_t hopLimit = 0,
-                    bool ackWantsAck = false);
+                    bool ackWantsAck = false, uint8_t ackedBy = 0);
 
   private:
     /**

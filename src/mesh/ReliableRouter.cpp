@@ -57,9 +57,12 @@ bool ReliableRouter::shouldFilterReceived(const meshtastic_MeshPacket *p)
         auto old = findPendingPacket(key);
         if (old) {
             LOG_DEBUG("Generate implicit ack");
+            LOG_INFO("IMPLICIT_ACK: Rebroadcast packet fields - from=0x%x, id=0x%x, relay_node=0x%x, hop_limit=%d, hop_start=%d",
+                     p->from, p->id, p->relay_node, p->hop_limit, p->hop_start);
             // NOTE: we do NOT check p->wantAck here because p is the INCOMING rebroadcast and that packet is not expected to be
             // marked as wantAck
-            sendAckNak(meshtastic_Routing_Error_NONE, getFrom(p), p->id, old->packet->channel);
+            // Pass p->relay_node as ackedBy so the phone app knows which node's rebroadcast triggered this implicit ACK
+            sendAckNak(meshtastic_Routing_Error_NONE, getFrom(p), p->id, old->packet->channel, 0, false, p->relay_node);
 
             // Only stop retransmissions if the rebroadcast came via LoRa
             if (p->transport_mechanism == meshtastic_MeshPacket_TransportMechanism_TRANSPORT_LORA) {
@@ -152,6 +155,8 @@ void ReliableRouter::sniffReceived(const meshtastic_MeshPacket *p, const meshtas
         // We intentionally don't check wasSeenRecently, because it is harmless to delete non existent retransmission records
         if (ackId || nakId) {
             LOG_DEBUG("Received a %s for 0x%x, stopping retransmissions", ackId ? "ACK" : "NAK", ackId);
+            LOG_INFO("ACK_RECEIVED: from=0x%x, to=0x%x, id=0x%x, request_id=0x%x, relay_node=0x%x, hop_limit=%d, hop_start=%d, channel=%d",
+                     p->from, p->to, p->id, p->decoded.request_id, p->relay_node, p->hop_limit, p->hop_start, p->channel);
             if (ackId) {
                 stopRetransmission(p->to, ackId);
             } else {

@@ -46,7 +46,7 @@ int32_t MeshModule::setStartDelay()
 }
 
 meshtastic_MeshPacket *MeshModule::allocAckNak(meshtastic_Routing_Error err, NodeNum to, PacketId idFrom, ChannelIndex chIndex,
-                                               uint8_t hopLimit)
+                                               uint8_t hopLimit, uint8_t ackedBy)
 {
     meshtastic_Routing c = meshtastic_Routing_init_default;
 
@@ -67,6 +67,9 @@ meshtastic_MeshPacket *MeshModule::allocAckNak(meshtastic_Routing_Error err, Nod
     p->to = to;
     p->decoded.request_id = idFrom;
     p->channel = chIndex;
+    p->relay_node = ackedBy; // For implicit ACKs, this identifies which node's rebroadcast triggered the ACK
+    LOG_INFO("ACK_ALLOC: Creating ACK packet - from=0x%x, to=0x%x, id=0x%x, request_id=0x%x, relay_node=0x%x, hop_limit=%d, channel=%d, err=%d",
+             p->from, p->to, p->id, p->decoded.request_id, p->relay_node, p->hop_limit, p->channel, err);
     if (err != meshtastic_Routing_Error_NONE)
         LOG_WARN("Alloc an err=%d,to=0x%x,idFrom=0x%x,id=0x%x", err, to, idFrom, p->id);
 
