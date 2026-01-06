@@ -75,9 +75,9 @@ uint8_t RoutingModule::getHopLimitForResponse(const meshtastic_MeshPacket &mp)
 }
 
 meshtastic_MeshPacket *RoutingModule::allocAckNak(meshtastic_Routing_Error err, NodeNum to, PacketId idFrom, ChannelIndex chIndex,
-                                                  uint8_t hopLimit)
+                                                  uint8_t hopLimit, uint8_t ackedBy)
 {
-    return MeshModule::allocAckNak(err, to, idFrom, chIndex, hopLimit);
+    return MeshModule::allocAckNak(err, to, idFrom, chIndex, hopLimit, ackedBy);
 }
 
 RoutingModule::RoutingModule() : ProtobufModule("routing", meshtastic_PortNum_ROUTING_APP, &meshtastic_Routing_msg)
