@@ -94,6 +94,20 @@ int32_t ExternalNotificationModule::runOnce()
         // audioThread->isPlaying() also handles actually playing the RTTTL, needs to be called in loop
         isRtttlPlaying = isRtttlPlaying || audioThread->isPlaying();
 #endif
+
+        // Check for button press to silence notification (works even when device-ui handles buttons)
+#if defined(BUTTON_PIN)
+        static bool lastButtonState = true; // Assume not pressed (active low)
+        bool buttonPressed = (digitalRead(BUTTON_PIN) == LOW); // Active low
+        if (buttonPressed && !lastButtonState && isNagging) {
+            LOG_INFO("Button press detected - silencing notification");
+            stopNow();
+            lastButtonState = buttonPressed;
+            return 50; // Quick poll during silence
+        }
+        lastButtonState = buttonPressed;
+#endif
+
         if ((nagCycleCutoff < millis()) && !isRtttlPlaying) {
             // Turn off external notification immediately when timeout is reached, regardless of song state
             nagCycleCutoff = UINT32_MAX;
