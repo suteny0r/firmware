@@ -1,3 +1,4 @@
+#if defined(GAT562)
 #include "game.h"
 
 #include "menu.h"
@@ -221,3 +222,5 @@ bool Game::moveY(Vec& pos, int8_t dy, const Box& hitbox, bool collideToEntity)
 
   return false;
 }
+
+#endif

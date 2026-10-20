@@ -1,3 +1,4 @@
+#if defined(GAT562)
 #include "CastleBoyApp.h"
 #include "global.h"
 #include "menu.h"
@@ -392,3 +393,5 @@ const uint8_t *CastleBoyApp::xbmBuffer()
       xbm[(uint16_t)y * 16 + (x >> 3)] |= (uint8_t)(1u << (x & 7));
   return xbm;
 }
+
+#endif

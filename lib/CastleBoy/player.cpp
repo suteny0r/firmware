@@ -1,3 +1,4 @@
+#if defined(GAT562)
 #include "player.h"
 
 #include "game.h"
@@ -390,3 +391,5 @@ void Player::draw()
 #endif
 
 }
+
+#endif

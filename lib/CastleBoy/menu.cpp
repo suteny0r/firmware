@@ -1,3 +1,4 @@
+#if defined(GAT562)
 #include "menu.h"
 
 #include "game.h"
@@ -464,3 +465,5 @@ void Menu::loop()
       break;
   }
 }
+
+#endif

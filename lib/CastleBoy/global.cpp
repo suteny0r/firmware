@@ -1,3 +1,4 @@
+#if defined(GAT562)
 #include "global.h"
 
 #include "assets.h"
@@ -99,4 +100,6 @@ void drawDebugRam()
 
   Util::drawNumber(64, 0, ram, ALIGN_CENTER);
 }
+#endif
+
 #endif

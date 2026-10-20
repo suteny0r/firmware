@@ -1,3 +1,4 @@
+#if defined(GAT562)
 #include "map.h"
 
 #include "game.h"
@@ -225,3 +226,5 @@ void Map::draw()
     }
   }
 }
+
+#endif

@@ -1,3 +1,4 @@
+#if defined(GAT562)
 #include "entity.h"
 
 #include "game.h"
@@ -1048,3 +1049,5 @@ void Entities::draw()
     }
   }
 }
+
+#endif

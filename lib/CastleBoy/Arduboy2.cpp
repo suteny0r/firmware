@@ -1,3 +1,4 @@
+#if defined(GAT562)
 #include "Arduboy2.h"
 
 void Arduboy2Base::drawPixel(int16_t x, int16_t y, uint8_t color)
@@ -66,3 +67,5 @@ void Sprites::drawPlusMask(int16_t x, int16_t y, const uint8_t *bitmap, uint8_t 
 {
   drawBitmap(x, y, bitmap, frame, true, false);
 }
+
+#endif
