@@ -12,7 +12,11 @@
 // flag. CJK_IME_NONE opts out entirely and compiles a plain Latin keyboard with
 // no candidate machinery at all.
 #if !defined(CJK_IME_PINYIN) && !defined(CJK_IME_ZHUYIN) && !defined(CJK_IME_NONE)
+#if defined(GAT562) || defined(GAT562_T9_KEYBOARD) || defined(TINYLORA_ADVANCED_IME)
 #define CJK_IME_PINYIN 1
+#else
+#define CJK_IME_NONE 1
+#endif
 #endif
 
 #if defined(CJK_IME_PINYIN) && defined(CJK_IME_ZHUYIN)
