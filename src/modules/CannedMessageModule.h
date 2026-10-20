@@ -55,7 +55,6 @@ class CannedMessageModule : public SinglePortModule, public Observable<const UIF
     CannedMessageModule();
 
     void LaunchWithDestination(NodeNum, uint8_t newChannel = 0);
-    void LaunchRepeatDestination();
     void LaunchFreetextWithDestination(NodeNum, uint8_t newChannel = 0);
 
     // === Emote Picker navigation ===
@@ -70,11 +69,10 @@ class CannedMessageModule : public SinglePortModule, public Observable<const UIF
 
     // === State/UI ===
     bool shouldDraw();
-    bool hasMessages();
     void resetSearch();
     void updateDestinationSelectionList();
     void drawDestinationSelectionScreen(OLEDDisplay *display, OLEDDisplayUiState *state, int16_t x, int16_t y);
-    bool isCharInputAllowed() const;
+    bool isFreeTextActive() const { return runState == CANNED_MESSAGE_RUN_STATE_FREETEXT; }
     String drawWithCursor(String text, int cursor);
 
     // === Emote Picker ===
@@ -112,7 +110,7 @@ class CannedMessageModule : public SinglePortModule, public Observable<const UIF
 
 #if defined(USE_VIRTUAL_KEYBOARD)
     void drawKeyboard(OLEDDisplay *display, OLEDDisplayUiState *state, int16_t x, int16_t y);
-    String keyForCoordinates(uint x, uint y);
+    String keyForCoordinates(int x, int y);
     void drawShiftIcon(OLEDDisplay *display, int x, int y, float scale = 1);
     void drawBackspaceIcon(OLEDDisplay *display, int x, int y, float scale = 1);
     void drawEnterIcon(OLEDDisplay *display, int x, int y, float scale = 1);
@@ -196,6 +194,11 @@ class CannedMessageModule : public SinglePortModule, public Observable<const UIF
     bool handleFreeTextInput(const InputEvent *event);
     int getPresetSlotForMessageIndex(int messageIndex) const;
     bool savePresetSlot(int presetSlot, const String &text);
+    // Opens the on-screen keyboard prompt for the current destination.
+    // Returns false when this device has no on-screen keyboard.
+    bool showOnScreenKeyboard();
+    // Set when a menu requested on-screen-keyboard compose; serviced by runOnce().
+    bool pendingOskLaunch = false;
 
 #if defined(USE_VIRTUAL_KEYBOARD)
     Letter keyboard[2][4][10] = {{{{"Q", 20, 0, 0, 0, 0},

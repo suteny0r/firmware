@@ -325,7 +325,7 @@ void VirtualKeyboard::drawInputArea(OLEDDisplay *display, int16_t offsetX, int16
     }
 
     // Draw box border
-    //display->drawRect(boxX, boxY, boxWidth, boxHeight);
+    // display->drawRect(boxX, boxY, boxWidth, boxHeight);
 
     display->setFont(FONT_SMALL);
 
@@ -451,7 +451,7 @@ void VirtualKeyboard::drawInputArea(OLEDDisplay *display, int16_t offsetX, int16
 #else
                 cursorCol
 #endif
-                == gotChars) {
+                                            == gotChars) {
                 // Underline spans the whole candidate word, not a fixed single-char
                 // width - a two-character phrase (中文) must show one line under both
                 // glyphs, otherwise only its first character appears selected.
@@ -717,7 +717,7 @@ void VirtualKeyboard::drawInputArea(OLEDDisplay *display, int16_t offsetX, int16
             display->drawVerticalLine(cursorX, cursorTop, cursorH - chineseArea);
         }
 
-        //display->drawVerticalLine(cursorX, cursorTop, cursorH);
+        // display->drawVerticalLine(cursorX, cursorTop, cursorH);
     }
 }
 
@@ -1004,8 +1004,7 @@ bool VirtualKeyboard::moveCandidateCursor(int delta)
         showPrevSelection();
         resetTimeout();
         return true;
-    }
-    else if (next >= count) {
+    } else if (next >= count) {
         showNextSelection();
         resetTimeout();
         return true;
@@ -1131,10 +1130,19 @@ void VirtualKeyboard::handleLongPress()
         insertCharacter(' ');
         break;
     case VK_ESC:
-        //if (onTextEntered) {
-        //    onTextEntered("");
-        //}
-		toggleIME();
+#if defined(VK_HAS_CJK_IME)
+        toggleIME();
+#else
+        if (onTextEntered) {
+            // Copy-and-clear before invoking, like handlePress/submitText: the callback can
+            // destroy this keyboard (OnScreenKeyboardModule::stop), so the member must not be
+            // the std::function still executing on the stack.
+            std::function<void(const std::string &)> callback = onTextEntered;
+            onTextEntered = nullptr;
+            inputText = "";
+            callback("");
+        }
+#endif
         break;
     default:
         break;
@@ -1598,9 +1606,9 @@ void VirtualKeyboard::showNextSelection()
 #endif
     selectListOffset = nextOffset >= selectListfulllen ? 0 : nextOffset;
 #else
-    uint8_t listlen = selectList.length();
-    uint8_t nextOffset = selectListOffset + listlen;
-    selectListOffset = nextOffset >= selectListfulllen ? 0 : nextOffset;
+        uint8_t listlen = selectList.length();
+        uint8_t nextOffset = selectListOffset + listlen;
+        selectListOffset = nextOffset >= selectListfulllen ? 0 : nextOffset;
 #endif
 #if defined(GAT562_T9_KEYBOARD)
     candidateCursor = 0;
