@@ -3,7 +3,7 @@
 ## Locked official base
 
 - Repository: `meshtastic/firmware`
-- Commit: `d4aa7760ccffd100ddc7dacd6875e6eee5df4f11`
+- Commit: `1dff54cabfe8b9eabd58a7656543ed62c9de0eb8`
 - Custom release branch: `gat-iot`
 
 The GAT562 branch keeps the following communication and security paths byte-for-byte
@@ -49,7 +49,7 @@ These files intentionally differ and must be reviewed after every official rebas
 Run before every release and compare the output with this allowlist:
 
 ```sh
-git diff --name-status d4aa7760..HEAD -- \
+git diff --name-status 1dff54ca..HEAD -- \
   src/MessageStore.cpp \
   src/modules/TextMessageModule.cpp \
   src/modules/RoutingModule.cpp \
