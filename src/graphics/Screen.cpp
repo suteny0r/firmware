@@ -2362,8 +2362,9 @@ int Screen::handleInputEvent(const InputEvent *event)
             } else if (event->inputEvent == INPUT_BROKER_RIGHT ||
                        (event->inputEvent == INPUT_BROKER_ANYKEY && event->kbchar == ' ')) {
                 showFrame(FrameDirection::NEXT);
-#if defined(GAT562_T9_KEYBOARD)
+#if defined(GAT562)
             } else if (event->inputEvent == INPUT_BROKER_USER_PRESS) {
+                // GAT562 boards navigate frames with the trackball; the side button turns the display off.
                 handleSetOn(false);
                 return 1;
 #else
